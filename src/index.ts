@@ -1,10 +1,10 @@
-import { AppDataSource } from "./config/database"
+// import { AppDataSource } from "./config/database"
 
 
-AppDataSource.initialize().then(async () => {
+// AppDataSource.initialize().then(async () => {
 
-    const connection = AppDataSource.getConnection()
+//     const connection = AppDataSource.getConnection()
 
-    console.log("Here you can setup and run express / fastify / any other framework.")
+//     console.log("Here you can setup and run express / fastify / any other framework.")
 
-}).catch(error => console.log(error))
+// }).catch(error => console.log(error))

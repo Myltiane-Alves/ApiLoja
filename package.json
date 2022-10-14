@@ -17,9 +17,9 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prisma:update": "npx prisma db pull && npx prisma generate",
     "migrate:create": "typeorm migration:create",
-    "migrate:up": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run -d .src/config/database.ts",
+    "migrate:up": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run ",
     "postmigrate:up": "npm run prisma:update",
-    "migrate:down": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert -d .src/config/database.ts",
+    "migrate:down": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert ",
     "postmigrate:down": "npm run prisma:update",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -33,10 +33,11 @@
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "^4.4.0",
     "mysql2": "^2.3.3",
+    "ormconfig.json": "^1.0.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.10"
+    "typeorm": "^0.2.41"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

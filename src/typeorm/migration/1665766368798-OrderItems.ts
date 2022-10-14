@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, Table} from "typeorm";
+import {MigrationInterface, QueryRunner, Table, TableForeignKey} from "typeorm";
 
 export class OrderItems1665766368798 implements MigrationInterface {
 
@@ -40,9 +40,18 @@ export class OrderItems1665766368798 implements MigrationInterface {
                 }
             ]
         }))
+
+        await queryRunner.createForeignKey("orderItems", new TableForeignKey({
+            columnNames: ["orderId"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "orderDetails",
+            name: "FK_orderItems_OrderDetails",
+            onDelete: "CASCADE"
+        }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropForeignKey("orderItems", "FK_orderItems_OrderDetails");
         await queryRunner.dropTable("orderItems");
     }
 

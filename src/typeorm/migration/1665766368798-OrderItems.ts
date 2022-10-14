@@ -48,10 +48,19 @@ export class OrderItems1665766368798 implements MigrationInterface {
             name: "FK_orderItems_OrderDetails",
             onDelete: "CASCADE"
         }))
+
+        await queryRunner.createForeignKey("orderItems", new TableForeignKey({
+            columnNames: ["productId"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "product",
+            name: "FK_orderItems_Product",
+            onDelete: "CASCADE"
+        }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropForeignKey("orderItems", "FK_orderItems_OrderDetails");
+        await queryRunner.dropForeignKey("orderItems", "FK_orderItems_Product");
         await queryRunner.dropTable("orderItems");
     }
 

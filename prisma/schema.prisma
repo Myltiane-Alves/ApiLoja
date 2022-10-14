@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model migrations {
+  id        Int    @id @default(autoincrement())
+  timestamp BigInt
+  name      String @db.VarChar(255)
+}
+
 model address {
   id           Int      @id @default(autoincrement())
   userId       Int
@@ -19,26 +25,43 @@ model address {
   phoneMobile  String   @db.VarChar(36)
   createdAt    DateTime @default(now()) @db.DateTime(0)
   updatedAt    DateTime @default(now()) @db.DateTime(0)
-  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_user_address")
-
-  @@index([userId], map: "FK_user_address")
 }
 
-model migrations {
-  id        Int    @id @default(autoincrement())
-  timestamp BigInt
-  name      String @db.VarChar(255)
+model cartitem {
+  id        Int      @id @default(autoincrement())
+  sessionId Int
+  productId Int
+  quantity  Int
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @db.Timestamp(0)
 }
 
-model user {
-  id        Int       @id @default(autoincrement())
-  userName  String    @unique(map: "UQ_da5934070b5f2726ebfd3122c80") @db.VarChar(255)
-  password  String    @db.VarChar(255)
-  name      String    @db.VarChar(255)
-  phone     String    @db.VarChar(36)
-  createdAt DateTime  @default(now()) @db.DateTime(0)
-  updatedAt DateTime  @default(now()) @db.DateTime(0)
-  address   address[]
+model discount {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(255)
+  description     String   @db.VarChar(255)
+  discountPorcent Decimal  @db.Decimal(10, 2)
+  active          Int      @db.TinyInt
+  createdAt       DateTime @default(now()) @db.Timestamp(0)
+  updatedAt       DateTime @default(now()) @db.Timestamp(0)
+}
+
+model orderdetails {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  total     Decimal  @db.Decimal(12, 4)
+  paymentId Int
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @db.Timestamp(0)
+}
+
+model orderitems {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @db.Timestamp(0)
 }
 
 model paymentdetails {
@@ -53,4 +76,61 @@ model paymenttype {
   id             Int    @id @default(autoincrement())
   namePayment    String @db.VarChar(100)
   paymentTypecol String @db.VarChar(100)
+}
+
+model product {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String   @db.VarChar(255)
+  barCode     String   @db.VarChar(255)
+  price       Decimal  @db.Decimal(10, 2)
+  categoryId  Int
+  inventoryId Int
+  discountId  Int
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+}
+
+model productcategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String   @db.VarChar(255)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+}
+
+model productinventory {
+  id          Int      @id @default(autoincrement())
+  quantity    Int
+  inventoryId Int
+  categoryId  Int
+  discountId  Int
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @default(now()) @db.Timestamp(0)
+}
+
+model shoppingsession {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  total     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @db.Timestamp(0)
+}
+
+model user {
+  id        Int      @id @default(autoincrement())
+  userName  String   @unique(map: "UQ_da5934070b5f2726ebfd3122c80") @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  phone     String   @db.VarChar(36)
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @db.DateTime(0)
+}
+
+model userpayment {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  paymentTypeId Int
+  createdAt     DateTime @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime @default(now()) @db.Timestamp(0)
 }

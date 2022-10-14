@@ -40,3 +40,17 @@ model user {
   updatedAt DateTime  @default(now()) @db.DateTime(0)
   address   address[]
 }
+
+model paymentdetails {
+  id            Int      @id @default(autoincrement())
+  oderId        Int
+  paymentTypeId Int
+  createdAt     DateTime @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime @default(now()) @db.Timestamp(0)
+}
+
+model paymenttype {
+  id             Int    @id @default(autoincrement())
+  namePayment    String @db.VarChar(100)
+  paymentTypecol String @db.VarChar(100)
+}

@@ -13,21 +13,7 @@ model migrations {
   name      String @db.VarChar(255)
 }
 
-model User {
-  id        Int       @id @default(autoincrement())
-  userName  String    @db.VarChar(255)
-  email     String    @unique(map: "UQ_e12875dfb3b1d92d7d7c5377e22") @db.VarChar(255)
-  password  String    @db.VarChar(255)
-  name      String    @db.VarChar(255)
-  phone     String    @db.VarChar(36)
-  createdAt DateTime  @default(now()) @db.DateTime(0)
-  updatedAt DateTime  @default(now()) @db.DateTime(0)
-  Address   Address[] @relation("addressTouser")
-
-  @@map("user")
-}
-
-model Discount {
+model discount {
   id              Int      @id @default(autoincrement())
   name            String   @db.VarChar(255)
   description     String   @db.VarChar(255)
@@ -35,21 +21,34 @@ model Discount {
   active          Int      @db.TinyInt
   createdAt       DateTime @default(now()) @db.Timestamp(0)
   updatedAt       DateTime @default(now()) @db.Timestamp(0)
-
-  @@map("discount")
 }
 
-model ProductCategory {
+model paymenttype {
+  id             Int    @id @default(autoincrement())
+  namePayment    String @db.VarChar(100)
+  paymentTypecol String @db.VarChar(100)
+}
+
+model person {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(250)
+  birthAt   DateTime @db.Date
+  phone     String   @db.VarChar(20)
+  document  String   @db.VarChar(14)
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @db.DateTime(0)
+  user      user[]
+}
+
+model productcategory {
   id          Int      @id @default(autoincrement())
   name        String   @db.VarChar(255)
   description String   @db.VarChar(255)
   createdAt   DateTime @default(now()) @db.Timestamp(0)
   updatedAt   DateTime @default(now()) @db.Timestamp(0)
-
-  @@map("productcategory")
 }
 
-model ProductInventory {
+model productinventory {
   id          Int      @id @default(autoincrement())
   quantity    Int
   inventoryId Int
@@ -57,30 +56,17 @@ model ProductInventory {
   discountId  Int
   createdAt   DateTime @default(now()) @db.Timestamp(0)
   updatedAt   DateTime @default(now()) @db.Timestamp(0)
-
-  @@map("productinventory")
 }
 
-model Address {
-  id           Int      @id @default(autoincrement())
-  userId       Int
-  addressLine1 String   @db.VarChar(255)
-  addressLine2 String   @db.VarChar(255)
-  city         String   @db.VarChar(255)
-  zipCode      String   @db.VarChar(10)
-  country      String   @db.VarChar(100)
-  phone        String   @db.VarChar(36)
-  phoneMobile  String   @db.VarChar(36)
-  createdAt    DateTime @default(now()) @db.DateTime(0)
-  updatedAt    DateTime @default(now()) @db.DateTime(0)
-  User         User     @relation("addressTouser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_user_address")
+model user {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique(map: "UQ_e12875dfb3b1d92d7d7c5377e22") @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  photo     String   @db.VarChar(255)
+  personId  Int
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @db.DateTime(0)
+  person    person   @relation(fields: [personId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_users_persons")
 
-  @@index([userId], map: "FK_user_address")
-  @@map("address")
-}
-
-model paymenttype {
-  id             Int    @id @default(autoincrement())
-  namePayment    String @db.VarChar(100)
-  paymentTypecol String @db.VarChar(100)
+  @@index([personId], map: "FK_users_persons")
 }

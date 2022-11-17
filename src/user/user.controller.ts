@@ -4,34 +4,19 @@ import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController { 
+    
     constructor(private userService: UserService) {}
-
-    // @Get()
-    // async showByEmail(@Query('email') email) {
-    //     return this.userService.getByEmail(email)
-    // }
-
-    @Get()
-    async show(@Query('id') id) {
+    
+    @Get(':id')
+    async show(@Param('id') id) {
         return this.userService.get(id)
     }
     
-    @Post('register')
-    async register(
-        @Body('userName') userName,
-        @Body('password') password,
-        @Body('email') email,
-        @Body('name') name,
-        @Body('phone') phone,
-    ) {
-        return await this.userService.register({
-            userName,
-            password,
-            email,
-            name,
-            phone,
-        });
+    @Get()
+    async showByEmail(@Query('email') email) {
+        return this.userService.getByEmail(email)
     }
+    
 
     @Delete(':id')
     @HttpCode(204)

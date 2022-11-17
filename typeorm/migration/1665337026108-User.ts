@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm"
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
 
 export class User1665337026108 implements MigrationInterface {
 
@@ -14,34 +14,28 @@ export class User1665337026108 implements MigrationInterface {
                     generationStrategy: "increment",
                 },
                 {
-                    name: "userName",
-                    type: "varchar",
-                    length: "255",
-                    isNullable: false,
-                },
-                {
                     name: "email",
+                    type: "varchar",
+                    length: "255",
                     isUnique: true,
+                    isNullable: false,
+                },
+                {
+                    name: "password",
                     type: "varchar",
                     length: "255",
                     isNullable: false,
                 },
                 {
-                    name: "password", 
-                    type: "varchar",
-                    length: "255",
-                    isNullable: false,      
-                },
-                {
-                    name: "name",
+                    name: "photo",
                     type: "varchar",
                     length: "255",
                     isNullable: false,
                 },
                 {
-                    name: 'phone',
-                    type: 'varchar',
-                    length: '36',
+                    name: 'personId',
+                    type: 'int',
+                    isNullable: false,
                 },
                 {
                     name: 'createdAt',
@@ -56,9 +50,18 @@ export class User1665337026108 implements MigrationInterface {
 
             ]
         }))
+
+        await queryRunner.createForeignKey("user", new TableForeignKey({
+            columnNames: ["personId"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "person",
+            name: "FK_users_persons",
+            onDelete: "CASCADE"
+        }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropForeignKey("user", "FK_users_persons");
         await queryRunner.dropTable("user")
     }
 

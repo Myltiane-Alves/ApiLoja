@@ -16,7 +16,9 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prisma:update": "npx prisma db pull && npx prisma generate",
-    "migrate:create": "typeorm migration:create",
+    "migrate:create": "typeorm migration:create ",
+    "migrate:run": "npm run typeorm migration:run -- -d ./ormconfig.ts && npx prisma db pull && npx prisma generate",
+    "typeorm": "typeorm-ts-node-esm",
     "migrate:up": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run ",
     "postmigrate:up": "npm run prisma:update",
     "migrate:down": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert ",
@@ -41,7 +43,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.3.10"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

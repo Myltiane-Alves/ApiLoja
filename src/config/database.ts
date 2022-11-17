@@ -1,18 +1,14 @@
 // import "reflect-metadata"
 // import { DataSource } from "typeorm"
 
-// export const AppDataSource = new DataSource({
+// export const connectionSource = new DataSource({
 //     type: "mysql",
-//     host: "localhost",
-//     port: 3306,
-//     username: "root",
-//     password: "95325414",
-//     database: "loja",
-//     synchronize: true,
-//     logging: false,
-//     entities: ["src/typeorm/entity/**/*.ts"],
+//     host: String(process.env.TYPEORM_HOST),
+//     port: Number(process.env.TYPEORM_PORT),
+//     username: String(process.env.TYPEORM_USERNAME),
+//     password: String(process.env.TYPEORM_PASSWORD),
+//     database: String(process.env.TYPEORM_DATABASE),
 //     migrations: ["src/typeorm/migration/**/*.ts"],
-//     subscribers: [],
-    
-    
+//     logging: false,
+//     synchronize: true,
 // })

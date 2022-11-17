@@ -14,7 +14,7 @@
 //                     generationStrategy: "increment"
 //                 },
 //                 {
-//                     name: "sessionId",  
+//                     name: "sessionId",
 //                     type: "int",
 //                     isNullable: false
 //                 },
@@ -56,7 +56,7 @@
 //             name: "FK_cartItem_Product",
 //             onDelete: "CASCADE"
 //         }))
-        
+
 //     }
 
 //     public async down(queryRunner: QueryRunner): Promise<void> {

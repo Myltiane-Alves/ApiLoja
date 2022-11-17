@@ -1,7 +1,7 @@
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { Module } from '@nestjs/common';
-import { UserModule } from '../user.module';
+import { UserModule } from '../user/user.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -12,7 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
         JwtModule.registerAsync({
             useFactory: () => ({
                 secret: process.env.JWT_SECRET,
-                signOptions:{
+                signOptions: {
                     expiresIn: Number(process.env.JWT_EXPIRES_IN)
                 }
             })
@@ -20,8 +20,13 @@ import { JwtModule } from '@nestjs/jwt';
         
     ],
     controllers: [
-        AuthController,],
+        AuthController,
+    ],
     providers: [
-        AuthService,],
+        AuthService,
+    ],
+    exports: [
+        AuthService
+    ]
 })
 export class AuthModule { }

@@ -1,4 +1,4 @@
-import { 
+import {
     Injectable,
     BadRequestException,
     NotFoundException,
@@ -9,15 +9,19 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 
-@Injectable()
-export class UserService { 
 
-    constructor(private prisma: PrismaService) {}
+@Injectable()
+export class UserService {
+
+    constructor(
+        private prisma: PrismaService,
+
+    ) { }
 
     async get(id: number, hashPassword = false) {
         id = Number(id);
 
-        if(isNaN(id)) {
+        if (isNaN(id)) {
             throw new BadRequestException('Id is required');
         }
 
@@ -27,56 +31,19 @@ export class UserService {
             },
         })
 
-        if(!hashPassword) {
+        if (!hashPassword) {
             delete user.password;
         }
 
-        if(!user) {
+        if (!user) {
             throw new BadRequestException('User not found');
         }
 
         return user;
     }
 
-    async register(
-        
-        {
-        userName,
-        email,
-        password,
-        name,
-        phone  
-
-    }: {
-        userName?: string;
-        email: string;
-        password: string;
-        name: string;
-        phone: string;
-    }) {
-        
-        const userCreated = await this.prisma.user.create({
-            data: {
-                userName,
-                password,
-                email,
-                name,
-                phone
-
-            }
-        })
-
-        if(userCreated) {
-            return {
-                message: 'User created successfully'
-            }
-        }
-        
-        
-    }
-
     async getByEmail(email: string) {
-        if(!email) {
+        if (!email) {
             throw new BadRequestException('Email is required')
         }
 
@@ -85,7 +52,7 @@ export class UserService {
                 email,
             }
         });
-        
+
         if (!user) {
             throw new NotFoundException('User not found');
         }
@@ -93,12 +60,54 @@ export class UserService {
         return user;
     }
 
-    async checkPassword(id: number, password: string){
+    async create({
+            userName,
+            email,
+            password,
+            name,
+            phone
+
+        }: {
+            userName?: string;
+            email: string;
+            password: string;
+            name: string;
+            phone: string;
+        }) {
+
+
+        let user = null
+
+        try {
+            user = await this.getByEmail(email);
+        } catch (e) {
+
+        }
+
+        if (user) {
+            throw new BadRequestException('Email already exists');
+        }
+
+        const userCreated = await this.prisma.user.create({
+            data: {
+                userName,
+                password: await bcrypt.hash(password, 10),
+                email,
+                name,
+                phone
+
+            }
+        })
+
+        return userCreated;
+    }
+
+    async checkPassword(id: number, password: string) {
         const user = await this.get(id, true);
 
         const checked = await bcrypt.compare(password, user.password);
 
-        if(!checked) {
+        if (!checked) {
             throw new UnauthorizedException('Email or password is incorrect');
         }
 
@@ -108,7 +117,7 @@ export class UserService {
     async delete(id: number) {
         id = Number(id);
 
-        if(isNaN(id)) {
+        if (isNaN(id)) {
             throw new BadRequestException('Id is required');
         }
 
@@ -118,7 +127,7 @@ export class UserService {
             }
         })
 
-        if(!user) {
+        if (!user) {
             throw new BadRequestException('User not found');
         }
 

@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import {JwtService } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
 
     constructor(
         private userService: UserService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private prisma: PrismaService,
     ) {}
 
     async getToken(userId: number) {
@@ -47,13 +49,51 @@ export class AuthService {
             expiresIn: 30 * 60,
         })
 
-        // await this.prisma.passwordRecovery.create({
-        //     data: {
-        //         userId, id
-        //         token,
-        //     }
-        // })
+        await this.prisma.passwordrecovery.create({
+            data: {
+                token,
+                userId: id,
+            }
+        })
 
         return { success: true };
+    }
+
+    async reset({password, token}: {password: string, token: string}){
+
+        if (!password) {
+            throw new BadRequestException('Password is required');
+        }
+
+        try {
+            await this.jwtService.verify(token);
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+
+        const passwordrecovery = await this.prisma.passwordrecovery.findFirst({
+            where: {
+                token,
+                resetAt: null,
+            }
+        });
+
+        if (!passwordrecovery) {
+            throw new BadRequestException('Invalid used');
+        }
+
+        await this.prisma.passwordrecovery.update({
+            where: {
+                id: passwordrecovery.id,
+            },
+            data: {
+                resetAt: new Date(),
+            }
+        });
+
+        return this.userService.updatePassword(
+            passwordrecovery.userId,
+            password,
+        )
     }
 }

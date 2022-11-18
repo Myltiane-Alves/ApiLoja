@@ -99,8 +99,14 @@ export class AuthController {
         return this.userService.changePassword(id, currentPassword, newPassword);
     }
 
-    // @Post('forget')
-    // async forgetPassword(@Body('email') email: string) {
-    //     return await this.authService.forgetPassword(email)
-    // }
+    @Post('forget')
+    async forget(@Body('email') email: string) {
+        return await this.authService.recovery(email)
+    }
+
+    @Post('password-reset')
+    async resetPassword(@Body('password') password: string, @Body('token') token: string) {
+        return await this.authService.reset({password, token});
+    }
+
 }

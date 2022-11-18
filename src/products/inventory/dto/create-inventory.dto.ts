@@ -1,17 +1,9 @@
 import { IsNotEmpty } from "class-validator";
 
-export class CreateProductDto {
-    @IsNotEmpty()
-    name: string;
+export class CreateInventoryDto {
 
     @IsNotEmpty()
-    description: string;
-
-    @IsNotEmpty()
-    price: string;
-
-    @IsNotEmpty()
-    image: string;
+    quantity: number;
 
     @IsNotEmpty()
     categoryId: number;

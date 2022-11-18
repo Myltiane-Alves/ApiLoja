@@ -11,12 +11,14 @@ export class AuthService {
     ) {}
 
     async getToken(userId: number) {
-        const { email, id} = await this.userService.get(userId);
+        const { email, id, photo, person} = await this.userService.get(userId);
+        const { name } = person;
 
         return this.jwtService.sign({ email, id });
     }
 
-    async login(email: string, password: string) {
+    async login({email, password}: {email: string, password: string}) {
+
         const user = await this.userService.getByEmail(email);
 
         await this.userService.checkPassword(user.id, password);
@@ -38,11 +40,20 @@ export class AuthService {
 
     async recovery(email: string) {
 
-        const {id, } = await this.userService.getByEmail(email);
-        // const { name } = person;
+        const {id, person } = await this.userService.getByEmail(email);
+        const { name } = person;
 
         const token = await this.jwtService.sign({ id }, {
             expiresIn: 30 * 60,
         })
+
+        // await this.prisma.passwordRecovery.create({
+        //     data: {
+        //         userId, id
+        //         token,
+        //     }
+        // })
+
+        return { success: true };
     }
 }

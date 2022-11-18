@@ -8,6 +8,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { Prisma } from '@prisma/client';
 
 
 @Injectable()
@@ -29,6 +30,9 @@ export class UserService {
             where: {
                 id,
             },
+            include: {
+                person: true
+            }
         })
 
         if (!hashPassword) {
@@ -50,6 +54,9 @@ export class UserService {
         const user = await this.prisma.user.findUnique({
             where: {
                 email,
+            },
+            include: {
+                person: true
             }
         });
 
@@ -61,20 +68,37 @@ export class UserService {
     }
 
     async create({
-            userName,
-            email,
-            password,
             name,
-            phone
+            email,
+            birthAt,
+            password,
+            phone,
+            document
 
         }: {
-            userName?: string;
+            name: string;
             email: string;
             password: string;
-            name: string;
-            phone: string;
+            birthAt?: Date;
+            phone?: string;
+            document: string;
         }) {
 
+            if (!name) {
+                throw new BadRequestException("Name is required");
+             }
+
+             if (!email) {
+                throw new BadRequestException("E-mail is required");
+             }
+
+             if (!password) {
+                throw new BadRequestException("Password is required");
+             }
+
+             if (birthAt && birthAt.toString().toLowerCase() === 'invalid date') {
+                throw new BadRequestException("Birth date is invalid");
+             }
 
         let user = null
 
@@ -90,16 +114,95 @@ export class UserService {
 
         const userCreated = await this.prisma.user.create({
             data: {
-                userName,
-                password: await bcrypt.hash(password, 10),
+                person: {
+                    create:  {
+                        name,
+                        birthAt,
+                        phone,
+                        document,
+                    },
+                },
                 email,
-                name,
-                phone
-
+                password: await bcrypt.hash(password, 10),
+            },
+            include: {
+                person: true
             }
         })
 
         return userCreated;
+    }
+
+    async update(id: number, {
+        name,
+        email,
+        birthAt,
+        phone,
+        document,
+        photo
+    }: {
+        name?: string;
+        email?: string;
+        birthAt?: Date;
+        phone?: string;
+        document?: string;
+        photo?: string;
+    }) {
+
+        id = Number(id);
+
+        if(isNaN(id)) {
+            throw new BadRequestException('Id is not a number');
+        }
+
+        const dataPerson = {} as Prisma.personUpdateInput;
+        const dataUser = {} as Prisma.userUpdateInput;
+
+        if (name) {
+            dataPerson.name = name;
+        }
+
+        if (birthAt) {
+            dataPerson.birthAt = birthAt;
+        }
+
+        if (phone) {
+            dataPerson.phone = phone;
+        }
+
+        if (document) {
+            dataPerson.document = document;
+        }
+
+        if (photo) {
+            dataUser.photo = photo;
+        }
+
+        if (email) {
+            dataUser.email = email;
+        }
+
+        const user = await this.get(id)
+
+        if (dataPerson) {
+            await this.prisma.person.update({
+                where: {
+                    id: user.personId,
+                },
+                data: dataPerson,
+            });
+        }
+
+        if (dataUser) {
+            await this.prisma.user.update({
+                where: {
+                    id,
+                },
+                data: dataUser,
+            });
+        }
+
+        return this.get(id);
     }
 
     async checkPassword(id: number, password: string) {
@@ -112,6 +215,47 @@ export class UserService {
         }
 
         return true;
+    }
+
+    async updatePassword(id: number, password: string) {
+
+        const user = await this.get(id)
+
+        const userUpdated = await this.prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                password: bcrypt.hashSync(password, 10),
+            },
+            include: {
+                person: true
+            }
+        });
+
+        delete userUpdated.password;
+
+        // await this.mailService.send({
+        //     to: userUpdated.email,
+        //     subject: "Sua senha foi alterada com sucesso!",
+        //     template: "reset-password-confirm",
+        //     data: {
+        //        name: userUpdated.person.name,
+        //     }
+        // })
+
+        return userUpdated;
+    }
+
+    async changePassword(id: number, currentPassword: string, newPassword: string) {
+
+        if(!newPassword) {
+            throw new BadRequestException('New password is required');
+        }
+
+        await this.checkPassword(id, currentPassword);
+
+        return this.updatePassword(id, newPassword);
     }
 
     async delete(id: number) {

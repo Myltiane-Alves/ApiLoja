@@ -1,8 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Post,
+    Put,
+    BadRequestException,
+    UseGuards,
+} from '@nestjs/common';
+import { parse } from 'date-fns';
 import { User } from 'src/user/user.decorator';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { Auth } from './auth.decorator';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -24,18 +34,31 @@ export class AuthController {
 
     @Post('register')
     async register(
-        @Body('userName') userName,
+        @Body('name') name,
         @Body('password') password,
         @Body('email') email,
-        @Body('name') name,
         @Body('phone') phone,
+        @Body('document') document,
+        @Body('birthAt') birthAt,
     ) {
+
+        if(birthAt) {
+            try {
+
+               birthAt = parse(birthAt, 'yyyy-MM-dd', new Date());
+
+            } catch(e) {
+               throw new BadRequestException("Invalid date");
+            }
+         }
+
         const user = await this.userService.create({
-            userName,
-            password,
-            email,
             name,
+            email,
+            password,
             phone,
+            document,
+            birthAt,
         });
 
         const token = await this.authService.getToken(user.id)
@@ -46,17 +69,38 @@ export class AuthController {
 
     @Post('login')
     async login(@Body('email') email, @Body('password') password) {
-        return await this.authService.login(email, password);
+        return this.authService.login({email, password});
     }
 
+    @UseGuards(AuthGuard)
     @Get('me')
     async me(@Auth() auth, @User() user) {
         return { auth, user  }
     }
 
+    @UseGuards(AuthGuard)
+    @Put('profile')
+    async profile(@User() user, @Body() body) {
 
-    @Post('forget')
-    async forgetPassword(@Body('email') email: string) {
-        return await this.authService.forgetPassword(email)
+        if(body.birthAt) {
+            body.birthAt = parse(body.birthAt, 'yyyy-MM-dd', new Date());
+        }
+
+        return this.userService.update(user.id, body);
     }
+
+    @UseGuards(AuthGuard)
+    @Put('password')
+    async changePassword(
+        @Body('currentPassword') currentPassword,
+        @Body('newPassword') newPassword,
+        @User('id') id,
+    ) {
+        return this.userService.changePassword(id, currentPassword, newPassword);
+    }
+
+    // @Post('forget')
+    // async forgetPassword(@Body('email') email: string) {
+    //     return await this.authService.forgetPassword(email)
+    // }
 }

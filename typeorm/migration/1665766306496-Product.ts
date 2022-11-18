@@ -26,7 +26,7 @@ export class Product1665766306496 implements MigrationInterface {
                     isNullable: false
                 },
                 {
-                    name: "barCode",
+                    name: "image",
                     type: "varchar",
                     length: "255",
                     isNullable: false

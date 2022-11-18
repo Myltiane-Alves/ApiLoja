@@ -30,7 +30,7 @@ export class User1665337026108 implements MigrationInterface {
                     name: "photo",
                     type: "varchar",
                     length: "255",
-                    isNullable: false,
+                    isNullable: true,
                 },
                 {
                     name: 'personId',

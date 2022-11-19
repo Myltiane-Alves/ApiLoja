@@ -1,7 +1,7 @@
 import {
     Controller,
     Post,
-    Put,
+    Patch,
     Body,
     Get,
     UseGuards,
@@ -31,6 +31,7 @@ export class ProductController {
         return this.productService.getById(id);
     }
 
+
     @UseGuards(AuthGuard)
     @Post()
     async registerProduct(
@@ -48,5 +49,22 @@ export class ProductController {
         });
         return product;
 
+    }
+
+    @UseGuards(AuthGuard)
+    @Patch(':id')
+    async update(
+        @Param('id') id: number,
+        @Body('name') name,
+        @Body('description') description,
+        @Body('price') price,
+        @Body('quantity') quantity,
+    ) {
+        return this.productService.updated(id, {
+            name,
+            description,
+            price,
+            quantity,
+        });
     }
 }

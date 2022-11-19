@@ -70,6 +70,36 @@ export class ProductService {
         return productCreated;
     }
 
-    async update(){}
+    async updated(id: number, {
+        name,
+        description,
+        price,
+        quantity,
+    } : {
+        name: string;
+        description: string;
+        price: string;
+        quantity: string;
+    }){
+        id = Number(id);
+
+        if(isNaN(id)) {
+            throw new BadRequestException('Id is required');
+        }
+
+
+        return this.prisma.product.update({
+            where: {
+                id: isValidNumber(id),
+            },
+            data: {
+                name,
+                description,
+                price,
+                quantity,
+            },
+        });
+    }
+
     async delete(){}
 }

@@ -17,7 +17,7 @@ export class ProductService {
 
     async get(){
         const products = await this.prisma.product.findMany();
-        return products;
+        return { message: 'Products', products };
     }
 
     async getById(id: number){
@@ -88,7 +88,7 @@ export class ProductService {
         }
 
 
-        return this.prisma.product.update({
+        const product = await this.prisma.product.update({
             where: {
                 id: isValidNumber(id),
             },
@@ -99,6 +99,8 @@ export class ProductService {
                 quantity,
             },
         });
+
+        return { message: 'Product updated', product };
     }
 
     async delete(id: number){

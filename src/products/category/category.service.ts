@@ -1,6 +1,7 @@
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { isValidNumber } from 'src/utils/validation-number';
 
 @Injectable()
 export class CategoryService {
@@ -10,9 +11,20 @@ export class CategoryService {
 
     ) { }
 
-    async get(){}
+    async get(){
+        const categories = await this.prisma.productcategory.findMany();
+        return { message: 'Categories', categories };
+    }
 
-    async getById(){}
+    async getById(id: number){
+        const category = await this.prisma.productcategory.findUnique({
+            where: {
+                id: isValidNumber(id),
+            },
+        });
+
+        return category;
+    }
 
     async create({
         name,
@@ -37,11 +49,43 @@ export class CategoryService {
             }
         });
 
-        return productcategoryCreated;
+        return {message: "Category registered successfully", productcategoryCreated};
 
     }
 
-    async update(){}
+    async updated(id: number, {
+        name,
+        description,
+    }: {
+        name: string;
+        description: string;
+    }){
+        const category = await this.prisma.productcategory.update({
+            where: {
+                id: isValidNumber(id),
+            },
+            data: {
+                name,
+                description,
+            }
+        });
 
-    async delete(){}
+        return {message: "Category updated successfully", category};
+    }
+
+    async delete(id: number){
+        id = isValidNumber(id);
+
+        if(isNaN(id)){
+            throw new BadRequestException('Id is required');
+        }
+
+        const category = await this.prisma.productcategory.delete({
+            where: {
+                id: isValidNumber(id),
+            }
+        });
+
+        return {message: "Category deleted successfully", category};
+    }
  }

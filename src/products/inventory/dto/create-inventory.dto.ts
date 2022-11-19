@@ -1,16 +1,21 @@
-import { IsNotEmpty } from "class-validator";
+// import { IsNotEmpty, IsNumber } from "class-validator";
 
-export class CreateInventoryDto {
+// export class CreateInventoryDto {
 
-    @IsNotEmpty()
-    quantity: number;
+//     @IsNotEmpty()
+//     // @IsNumber()
+//     quantity: number;
 
-    @IsNotEmpty()
-    categoryId: number;
+//     @IsNotEmpty()
+//     // @IsNumber()
+//     categoryId: number;
 
-    @IsNotEmpty()
-    inventoryId: number;
 
-    @IsNotEmpty()
-    discountId: number;
-}
+//     @IsNotEmpty()
+//     // @IsNumber()
+//     inventoryId?: number;
+
+//     @IsNotEmpty()
+//     // @IsNumber()
+//     discountId: number;
+// }

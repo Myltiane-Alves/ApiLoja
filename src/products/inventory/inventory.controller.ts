@@ -1,22 +1,30 @@
-import {
-    Controller,
-    Post,
-    Body
-} from '@nestjs/common';
-import { InventoryService } from './inventory.service';
+// import {
+//     Controller,
+//     Post,
+//     Body,
+//     ParseIntPipe,
+//     UseGuards
+// } from '@nestjs/common';
+// import { InventoryService } from './inventory.service';
+// import {CreateInventoryDto} from './dto/create-inventory.dto';
+// import { User } from 'src/user/user.decorator';
+// import { AuthGuard } from 'src/auth/auth.guard';
+// @Controller('inventory')
+// export class InventoryController {
 
-@Controller('inventory')
-export class InventoryController {
+//     constructor(
+//         private inventoryService: InventoryService,
+//     ) {}
 
-    constructor(
-        private inventoryService: InventoryService,
-    ) {}
+//     @UseGuards(AuthGuard)
+//     @Post('register')
+//     async RegisterProduct(
+//         @Body(ParseIntPipe) data: CreateInventoryDto,
+//         // @User() user,
 
-    @Post('register')
-    async RegisterProduct(
-        @Body('quantity') quantity,
-
-    ) {
-        return await this.inventoryService.create(quantity);
-    }
-}
+//     ) {
+//         return this.inventoryService.create(data);
+//         // return console.log(this.inventoryService.create(data));
+//         // return await this.inventoryService.create(data);
+//     }
+// }

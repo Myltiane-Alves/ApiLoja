@@ -3,26 +3,37 @@ import {
     Post,
     Put,
     Body,
-    ParseIntPipe
+    ParseIntPipe,
+    UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { User } from 'src/user/user.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
 
-@Controller('products')
+@Controller('produtos')
 export class ProductController {
 
     constructor(
         private productService: ProductService,
     ) {}
 
-    @Post('register')
+    @UseGuards(AuthGuard)
+    @Post()
     async registerProduct(
-        @Body(ParseIntPipe) data: CreateProductDto,
-        @User() user,
+        @Body('name') name,
+        @Body('description') description,
+        @Body('price') price,
+        @Body('quantity') quantity,
     ) {
 
-        return await this.productService.create(user.personId, data);
+        const product = await this.productService.create({
+            name,
+            description,
+            price,
+            quantity,
+        });
+        return product;
 
     }
 }

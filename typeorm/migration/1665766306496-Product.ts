@@ -39,25 +39,11 @@ export class Product1665766306496 implements MigrationInterface {
                 },
                 {
                     name: "quantity",
-                    type: "decimal",
-                    precision: 10,
-                    scale: 2,
-                },
-                {
-                    name: "categoryId",
-                    type: "int",
+                    type: "varchar",
+                    length: "255",
                     isNullable: false
                 },
-                {
-                    name: "inventoryId",
-                    type: "int",
-                    isNullable: false
-                },
-                {
-                    name: "discountId",
-                    type: "int",
-                    isNullable: false
-                },
+
                 {
                     name: "createdAt",
                     type: "timestamp",
@@ -71,35 +57,18 @@ export class Product1665766306496 implements MigrationInterface {
             ]
         }))
 
-        await queryRunner.createForeignKey("product", new TableForeignKey({
-            columnNames: ["categoryId"],
-            referencedColumnNames: ["id"],
-            referencedTableName: "productCategory",
-            name: "FK_product_Category",
-            onDelete: "CASCADE"
-        }))
+        // await queryRunner.createForeignKey("product", new TableForeignKey({
+        //     columnNames: ["categoryId"],
+        //     referencedColumnNames: ["id"],
+        //     referencedTableName: "productCategory",
+        //     name: "FK_product_Category",
+        //     onDelete: "CASCADE"
+        // }))
 
-        await queryRunner.createForeignKey("product", new TableForeignKey({
-            columnNames: ["inventoryId"],
-            referencedColumnNames: ["id"],
-            referencedTableName: "productInventory",
-            name: "FK_product_Inventory",
-            onDelete: "CASCADE"
-        }))
 
-        await queryRunner.createForeignKey("product", new TableForeignKey({
-            columnNames: ["discountId"],
-            referencedColumnNames: ["id"],
-            referencedTableName: "discount",
-            name: "FK_product_Discount",
-            onDelete: "CASCADE"
-        }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey("product", "FK_product_Category");
-        await queryRunner.dropForeignKey("product", "FK_product_Inventory");
-        await queryRunner.dropForeignKey("product", "FK_product_Discount");
         await queryRunner.dropTable("product");
     }
 

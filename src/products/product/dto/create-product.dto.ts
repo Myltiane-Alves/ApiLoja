@@ -11,17 +11,8 @@ export class CreateProductDto {
     price: string;
 
     @IsNotEmpty()
-    quantity: number;
+    quantity: string;
 
     @IsNotEmpty()
     image: string;
-
-    @IsNotEmpty()
-    categoryId: number;
-
-    @IsNotEmpty()
-    inventoryId: number;
-
-    @IsNotEmpty()
-    discountId: number;
 }

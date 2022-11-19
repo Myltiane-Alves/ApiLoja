@@ -1,5 +1,8 @@
+import { DiscountController } from './products/discount/discount.controller';
+import { DiscountService } from './products/discount/discount.service';
+import { DiscountModule } from './products/discount/discount.module';
 import { CategoryModule } from './products/category/category.module';
-import { InventoryModule } from './products/inventory/inventory.module';
+// import { InventoryModule } from './products/inventory/inventory.module';
 import { ProductModule } from './products/product/product.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
@@ -8,13 +11,17 @@ import { Module } from '@nestjs/common';
 
 @Module({
     imports: [
+        DiscountModule,
         CategoryModule,
-        InventoryModule,
+        // InventoryModule,
         ProductModule,
         AuthModule,
         UserModule,
-        PrismaModule,],
-    controllers: [],
-    providers: [],
+        PrismaModule,
+    ],
+    controllers: [
+     ],
+    providers: [
+       ],
 })
 export class AppModule { }

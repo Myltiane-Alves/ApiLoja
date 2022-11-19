@@ -1,10 +1,8 @@
-
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class CategoryService {
-
+export class DiscountService {
     constructor(
         private prisma: PrismaService,
 
@@ -17,31 +15,38 @@ export class CategoryService {
     async create({
         name,
         description,
+        discountPorcent,
     }: {
         name: string;
         description: string;
+        discountPorcent: number;
     }){
 
         if(!name){
-            throw new BadRequestException('Name is required entrou aqui');
+            throw new BadRequestException('Name is required ');
         }
 
         if(!description){
             throw new BadRequestException('Description is required');
         }
 
-        const productcategoryCreated = await this.prisma.productcategory.create({
+        if(!discountPorcent){
+            throw new BadRequestException('Description is required');
+        }
+
+        const discountCreated = await this.prisma.discount.create({
             data: {
                 name,
                 description,
+                discountPorcent,
             }
         });
 
-        return productcategoryCreated;
+        return discountCreated;
 
     }
 
     async update(){}
 
     async delete(){}
- }
+}

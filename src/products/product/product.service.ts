@@ -17,80 +17,41 @@ export class ProductService {
 
     async get(){}
     async getById(){}
-    async create(personId: number, {
+    async create({
         name,
         description,
-        image,
         price,
         quantity,
-        categoryId,
-        inventoryId,
-        discountId,
-    }:  CreateProductDto  ){
-
-        categoryId = isValidNumber(categoryId);
-        inventoryId = isValidNumber(inventoryId);
-        discountId = isValidNumber(discountId);
-
-
-        const category = await this.prisma.productcategory.findUnique({
-            where: {
-                id: categoryId,
-            },
-        });
-
-        if(!category) {
-            throw new BadRequestException("Category not found.");
-        }
-
-        const inventory = await this.prisma.productinventory.findUnique({
-            where: {
-                id: inventoryId,
-            },
-        });
-
-        if(!inventory) {
-            throw new BadRequestException("Inventory not found.");
-        }
-
-        const discount = await this.prisma.discount.findUnique({
-            where: {
-                id: discountId,
-            },
-        });
-
-        if(!discount) {
-            throw new BadRequestException("Discount not found.");
-        }
+    }:  {
+        name: string;
+        description: string;
+        price: string;
+        quantity: string;
+    }  ){
 
         if(!name) {
             throw new BadRequestException('Name is required');
         }
 
         if(!description) {
-            throw new BadRequestException('Description is required');
+            throw new BadRequestException('Description is required Entrou aqui');
         }
 
         if(!price) {
             throw new BadRequestException('Price is required')
         }
 
+        if(!quantity) {
+            throw new BadRequestException('Quantity is required')
+        }
+
         const productCreated = await this.prisma.product.create({
             data: {
                 name,
                 description,
-                image,
                 price,
                 quantity,
-                categoryId,
-                inventoryId,
-                discountId,
             },
-            // include: {
-            //     productcategory: true,
-            //     productinventory: true,
-            //     discount: true,
-            // }
         })
 
         return productCreated;

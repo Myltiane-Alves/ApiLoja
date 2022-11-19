@@ -1,12 +1,10 @@
-import { CategoryController } from './category.controller';
-import { CategoryService } from './category.service';
-
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from 'src/auth/auth.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
-import { AuthModule } from 'src/auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
-import { DiscountModule } from '../discount/discount.module';
+import { DiscountController } from './discount.controller';
+import { DiscountService } from './discount.service';
 
 @Module({
     imports: [
@@ -20,13 +18,9 @@ import { DiscountModule } from '../discount/discount.module';
             })
         }),
         AuthModule,
-        UserModule,
-
-
+        UserModule
     ],
-    controllers: [
-        CategoryController,],
-    providers: [
-        CategoryService,],
+    controllers: [DiscountController],
+    providers: [DiscountService],
 })
-export class CategoryModule { }
+export class DiscountModule { }

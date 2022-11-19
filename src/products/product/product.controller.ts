@@ -3,8 +3,9 @@ import {
     Post,
     Put,
     Body,
-    ParseIntPipe,
-    UseGuards
+    Get,
+    UseGuards,
+    Param
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { User } from 'src/user/user.decorator';
@@ -17,6 +18,18 @@ export class ProductController {
     constructor(
         private productService: ProductService,
     ) {}
+
+    @UseGuards(AuthGuard)
+    @Get()
+    async getAll() {
+        return this.productService.get();
+    }
+
+    @UseGuards(AuthGuard)
+    @Get(':id')
+    async getById(@Param('id') id: number) {
+        return this.productService.getById(id);
+    }
 
     @UseGuards(AuthGuard)
     @Post()

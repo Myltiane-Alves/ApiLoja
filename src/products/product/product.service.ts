@@ -15,8 +15,21 @@ export class ProductService {
 
     ) { }
 
-    async get(){}
-    async getById(){}
+    async get(){
+        const products = await this.prisma.product.findMany();
+        return products;
+    }
+
+    async getById(id: number){
+        const product = await this.prisma.product.findUnique({
+            where: {
+                id: isValidNumber(id),
+            },
+        });
+
+        return product;
+    }
+
     async create({
         name,
         description,

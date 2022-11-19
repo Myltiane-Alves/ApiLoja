@@ -69,19 +69,36 @@ export class User1665337026108 implements MigrationInterface {
 
 
 
+// model Address {
+//     id          Int      @id @default(autoincrement())
+//     personId    Int
+//     street      Int
+//     number      String   @db.VarChar(16)
+//     complement  String   @db.VarChar(255)
+//     district    String   @db.VarChar(255)
+//     city        String   @db.VarChar(255)
+//     zipCode     String   @db.VarChar(10)
+//     state       String   @db.VarChar(255)
+//     country     String   @db.VarChar(100)
+//     phone       String   @db.VarChar(36)
+//     phoneMobile String   @db.VarChar(36)
+//     createdAt   DateTime @default(now()) @db.DateTime(0)
+//     updatedAt   DateTime @default(now()) @db.DateTime(0)
+//     person      Person   @relation(fields: [personId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_address_person")
 
-// model Discount {
-//     id              Int       @id @default(autoincrement())
-//     name            String    @db.VarChar(255)
-//     description     String    @db.VarChar(255)
-//     discountPorcent Decimal   @db.Decimal(10, 2)
-//     active          Int       @db.TinyInt
-//     createdAt       DateTime  @default(now()) @db.Timestamp(0)
-//     updatedAt       DateTime  @default(now()) @db.Timestamp(0)
-//     product         Product[]
-// }
+//     @@index([personId], map: "FK_address_person")
+//   }
 
-// model PasswordRecovery {
+//   model Discount {
+//     id              Int      @id @default(autoincrement())
+//     name            String   @db.VarChar(255)
+//     description     String   @db.VarChar(255)
+//     discountPorcent Decimal  @db.Decimal(10, 2)
+//     createdAt       DateTime @default(now()) @db.Timestamp(0)
+//     updatedAt       DateTime @default(now()) @db.Timestamp(0)
+//   }
+
+//   model PasswordRecovery {
 //     id        Int       @id @default(autoincrement())
 //     token     String    @db.VarChar(255)
 //     userId    Int
@@ -91,67 +108,46 @@ export class User1665337026108 implements MigrationInterface {
 //     user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_password_recoveries_users")
 
 //     @@index([userId], map: "FK_password_recoveries_users")
-// }
+//   }
 
-// model PaymentType {
+//   model PaymentType {
 //     id             Int    @id @default(autoincrement())
 //     namePayment    String @db.VarChar(100)
 //     paymentTypecol String @db.VarChar(100)
-// }
+//   }
 
-// model Person {
-//     id        Int      @id @default(autoincrement())
-//     name      String   @db.VarChar(250)
-//     birthAt   DateTime @db.Date
-//     phone     String   @db.VarChar(20)
-//     document  String   @db.VarChar(14)
-//     createdAt DateTime @default(now()) @db.DateTime(0)
-//     updatedAt DateTime @default(now()) @db.DateTime(0)
+//   model Person {
+//     id        Int       @id @default(autoincrement())
+//     name      String    @db.VarChar(250)
+//     birthAt   DateTime  @db.Date
+//     phone     String    @db.VarChar(20)
+//     document  String    @db.VarChar(14)
+//     createdAt DateTime  @default(now()) @db.DateTime(0)
+//     updatedAt DateTime  @default(now()) @db.DateTime(0)
+//     address   Address[]
 //     user      User[]
-// }
+//   }
 
-// model Product {
-//     id               Int              @id @default(autoincrement())
-//     name             String           @db.VarChar(255)
-//     description      String           @db.VarChar(255)
-//     image            String?          @db.VarChar(255)
-//     price            Decimal          @db.Decimal(10, 2)
-//     quantity         Decimal          @db.Decimal(10, 2)
-//     categoryId       Int
-//     inventoryId      Int
-//     discountId       Int
-//     createdAt        DateTime         @default(now()) @db.Timestamp(0)
-//     updatedAt        DateTime         @default(now()) @db.Timestamp(0)
-//     productcategory  ProductCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_product_Category")
-//     discount         Discount         @relation(fields: [discountId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_product_Discount")
-//     productinventory ProductInventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_product_Inventory")
+//   model Product {
+//     id          Int      @id @default(autoincrement())
+//     name        String   @db.VarChar(255)
+//     description String   @db.VarChar(255)
+//     image       String?  @db.VarChar(255)
+//     price       Decimal  @db.Decimal(10, 2)
+//     quantity    String   @db.VarChar(255)
+//     createdAt   DateTime @default(now()) @db.Timestamp(0)
+//     updatedAt   DateTime @default(now()) @db.Timestamp(0)
+//   }
 
-//     @@index([categoryId], map: "FK_product_Category")
-//     @@index([discountId], map: "FK_product_Discount")
-//     @@index([inventoryId], map: "FK_product_Inventory")
-// }
+//   model ProductCategory {
+//     id          Int      @id @default(autoincrement())
+//     name        String   @db.VarChar(255)
+//     description String   @db.VarChar(255)
+//     createdAt   DateTime @default(now()) @db.Timestamp(0)
+//     updatedAt   DateTime @default(now()) @db.Timestamp(0)
+//   }
 
-// model ProductCategory {
-//     id          Int       @id @default(autoincrement())
-//     name        String    @db.VarChar(255)
-//     description String    @db.VarChar(255)
-//     createdAt   DateTime  @default(now()) @db.Timestamp(0)
-//     updatedAt   DateTime  @default(now()) @db.Timestamp(0)
-//     product     Product[]
-// }
-
-// model ProductInventory {
-//     id          Int       @id @default(autoincrement())
-//     quantity    Int
-//     inventoryId Int
-//     categoryId  Int
-//     discountId  Int
-//     createdAt   DateTime  @default(now()) @db.Timestamp(0)
-//     updatedAt   DateTime  @default(now()) @db.Timestamp(0)
-//     product     Product[]
-// }
-
-// model User {
+//   model User {
 //     id               Int                @id @default(autoincrement())
 //     email            String             @unique(map: "UQ_e12875dfb3b1d92d7d7c5377e22") @db.VarChar(255)
 //     password         String             @db.VarChar(255)
@@ -163,4 +159,4 @@ export class User1665337026108 implements MigrationInterface {
 //     PasswordRecovery PasswordRecovery[]
 
 //     @@index([personId], map: "FK_users_persons")
-// }
+//   }

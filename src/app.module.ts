@@ -1,3 +1,5 @@
+import { AdressesService } from './addresses/addresses.service';
+import { AddressesModule } from './addresses/addresses.module';
 import { DiscountController } from './products/discount/discount.controller';
 import { DiscountService } from './products/discount/discount.service';
 import { DiscountModule } from './products/discount/discount.module';
@@ -11,6 +13,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
     imports: [
+        AddressesModule,
         DiscountModule,
         CategoryModule,
         // InventoryModule,
@@ -20,8 +23,9 @@ import { Module } from '@nestjs/common';
         PrismaModule,
     ],
     controllers: [
-     ],
+    ],
     providers: [
-       ],
+        AdressesService,
+    ],
 })
 export class AppModule { }

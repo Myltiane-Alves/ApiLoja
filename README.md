@@ -5,7 +5,9 @@
 $ npm install
 ```
 
-## Running the app
+## Para Rodar a aplicação
+
+```bash
 
 ```bash
 # development
@@ -66,6 +68,8 @@ Tecnologias utilizadas:
     Não deve ser possível cadastrar um produto está logado
     Não deve ser possível cadastrar uma venda está logado
     Não deve ser possível listar as vendas está logado
+
+   # Cadastro de Produtos
 
 
 

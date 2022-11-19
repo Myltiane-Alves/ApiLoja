@@ -101,5 +101,19 @@ export class ProductService {
         });
     }
 
-    async delete(){}
+    async delete(id: number){
+        id = Number(id);
+
+        if(isNaN(id)) {
+            throw new BadRequestException('Id is required');
+        }
+
+        const productDeleted = await this.prisma.product.delete({
+            where: {
+                id: isValidNumber(id),
+            },
+        });
+
+        return { message: 'Product deleted', productDeleted };
+    }
 }

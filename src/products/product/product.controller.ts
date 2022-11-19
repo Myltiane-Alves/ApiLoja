@@ -5,7 +5,8 @@ import {
     Body,
     Get,
     UseGuards,
-    Param
+    Param,
+    Delete
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { User } from 'src/user/user.decorator';
@@ -66,5 +67,11 @@ export class ProductController {
             price,
             quantity,
         });
+    }
+
+    @UseGuards(AuthGuard)
+    @Delete(':id')
+    async delete(@Param('id') id: number) {
+        return this.productService.delete(id);
     }
 }

@@ -14,9 +14,9 @@ export class InventoryController {
 
     @Post('register')
     async RegisterProduct(
-        @Body('name') quantity,
+        @Body('quantity') quantity,
 
     ) {
-        return await this.inventoryService.create(data);
+        return await this.inventoryService.create(quantity);
     }
 }

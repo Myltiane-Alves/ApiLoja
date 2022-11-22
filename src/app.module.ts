@@ -1,3 +1,6 @@
+import { CartItemController } from './cartItem/cartitem.controller';
+import { CartItemService } from './cartItem/cartitem.service';
+import { CartItemModule } from './cartItem/cartitem.module';
 import { PaymentModule } from './payment/payment.module';
 import { ContactModule } from './contact/contact.module';
 import { ZipcodeController } from './addresses/zipcode.controller';
@@ -13,6 +16,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
     imports: [
+        CartItemModule,
         PaymentModule,
         ContactModule,
         AddressesModule,
@@ -25,9 +29,11 @@ import { Module } from '@nestjs/common';
         PrismaModule,
     ],
     controllers: [
+        CartItemController,
         ZipcodeController,
     ],
     providers: [
+        CartItemService,
 
     ],
 })

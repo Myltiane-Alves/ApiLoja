@@ -155,7 +155,7 @@ export class UserService {
             throw new BadRequestException('Id is not a number');
         }
 
-        const dataPerson = {} as Prisma.personUpdateInput;
+        const dataPerson = {} as Prisma.PersonUpdateInput;
         const dataUser = {} as Prisma.userUpdateInput;
 
         if (name) {

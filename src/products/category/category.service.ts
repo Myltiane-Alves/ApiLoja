@@ -12,12 +12,12 @@ export class CategoryService {
     ) { }
 
     async get(){
-        const categories = await this.prisma.productcategory.findMany();
+        const categories = await this.prisma.productCategory.findMany();
         return { message: 'Categories', categories };
     }
 
     async getById(id: number){
-        const category = await this.prisma.productcategory.findUnique({
+        const category = await this.prisma.productCategory.findUnique({
             where: {
                 id: isValidNumber(id),
             },
@@ -42,7 +42,7 @@ export class CategoryService {
             throw new BadRequestException('Description is required');
         }
 
-        const productcategoryCreated = await this.prisma.productcategory.create({
+        const productcategoryCreated = await this.prisma.productCategory.create({
             data: {
                 name,
                 description,
@@ -60,7 +60,7 @@ export class CategoryService {
         name: string;
         description: string;
     }){
-        const category = await this.prisma.productcategory.update({
+        const category = await this.prisma.productCategory.update({
             where: {
                 id: isValidNumber(id),
             },
@@ -80,7 +80,7 @@ export class CategoryService {
             throw new BadRequestException('Id is required');
         }
 
-        const category = await this.prisma.productcategory.delete({
+        const category = await this.prisma.productCategory.delete({
             where: {
                 id: isValidNumber(id),
             }

@@ -20,7 +20,7 @@ export class address1665761159450 implements MigrationInterface {
                 },
                 {
                     name: "street",
-                    type: "int",
+                    type: "varchar",
                     isNullable: false,
                 },
                 {

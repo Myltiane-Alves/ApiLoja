@@ -1,7 +1,6 @@
-import { AdressesService } from './addresses/addresses.service';
+import { ContactModule } from './contact/contact.module';
+import { ZipcodeController } from './addresses/zipcode.controller';
 import { AddressesModule } from './addresses/addresses.module';
-import { DiscountController } from './products/discount/discount.controller';
-import { DiscountService } from './products/discount/discount.service';
 import { DiscountModule } from './products/discount/discount.module';
 import { CategoryModule } from './products/category/category.module';
 // import { InventoryModule } from './products/inventory/inventory.module';
@@ -13,6 +12,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
     imports: [
+        ContactModule,
         AddressesModule,
         DiscountModule,
         CategoryModule,
@@ -23,9 +23,10 @@ import { Module } from '@nestjs/common';
         PrismaModule,
     ],
     controllers: [
+        ZipcodeController,
     ],
     providers: [
-        AdressesService,
+
     ],
 })
 export class AppModule { }

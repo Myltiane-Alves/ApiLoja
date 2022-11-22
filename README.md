@@ -42,14 +42,16 @@ Tecnologias utilizadas:
     "typescript"
 
     **Requisito Funcional = RF**
-    Deve ser Possível cadastrar um usuário
+    Deve ser Possível cadastrar um usuário [x]
+    Deve ser Possível cadastrar um contato [x]
+    Deve ser Possível cadastrar um endereço [x]
     Deve ser Possível listar as categorias
-    Deve ser Possível cadastrar uma categoria
-    Deve ser Possível cadastrar um produto
-    Deve ser Possível listar os produtos
+    Deve ser Possível cadastrar uma categoria [x]
+    Deve ser Possível cadastrar um produto [x]
+    Deve ser Possível listar os produtos [x]
     Deve ser Possível listar os produtos por categoria
     Deve ser Possível listar os produtos por nome
-    Deve ser Possível listar os produtos por id
+    Deve ser Possível listar os produtos por id [x]
     Deve ser Possível cadastrar uma venda
     Deve ser Possível listar as vendas
     Deve ser Possível listar as vendas por id

@@ -156,7 +156,7 @@ export class UserService {
         }
 
         const dataPerson = {} as Prisma.PersonUpdateInput;
-        const dataUser = {} as Prisma.userUpdateInput;
+        const dataUser = {} as Prisma.UserUpdateInput;
 
         if (name) {
             dataPerson.name = name;

@@ -49,7 +49,7 @@ export class AuthService {
             expiresIn: 30 * 60,
         })
 
-        await this.prisma.passwordrecovery.create({
+        await this.prisma.passwordRecovery.create({
             data: {
                 token,
                 userId: id,
@@ -71,7 +71,7 @@ export class AuthService {
             throw new BadRequestException(e.message);
         }
 
-        const passwordrecovery = await this.prisma.passwordrecovery.findFirst({
+        const passwordrecovery = await this.prisma.passwordRecovery.findFirst({
             where: {
                 token,
                 resetAt: null,
@@ -82,7 +82,7 @@ export class AuthService {
             throw new BadRequestException('Invalid used');
         }
 
-        await this.prisma.passwordrecovery.update({
+        await this.prisma.passwordRecovery.update({
             where: {
                 id: passwordrecovery.id,
             },

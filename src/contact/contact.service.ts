@@ -9,12 +9,12 @@ export class ContactService {
     ){}
 
     async get(){
-        const contacts = await this.prisma.contacts.findMany()
+        const contacts = await this.prisma.contact.findMany()
         return { message: "All Contacts ", contacts}
     }
 
     async getById(id: number){
-        const contacts = await this.prisma.contacts.findUnique({
+        const contacts = await this.prisma.contact.findUnique({
             where: {
                 id: isValidNumber(id)
             }
@@ -45,7 +45,7 @@ export class ContactService {
             throw new BadRequestException("Phone is required")
         }
 
-        const contactCreated = await this.prisma.contacts.create({
+        const contactCreated = await this.prisma.contact.create({
             data: {
                 name,
                 email,
@@ -59,7 +59,7 @@ export class ContactService {
     async remove(id: number){
         id = Number(id)
 
-        const contacts = await this.prisma.contacts.delete({
+        const contacts = await this.prisma.contact.delete({
             where: {
                 id
             }

@@ -1,3 +1,4 @@
+import { PaymentModule } from './payment/payment.module';
 import { ContactModule } from './contact/contact.module';
 import { ZipcodeController } from './addresses/zipcode.controller';
 import { AddressesModule } from './addresses/addresses.module';
@@ -12,6 +13,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
     imports: [
+        PaymentModule,
         ContactModule,
         AddressesModule,
         DiscountModule,

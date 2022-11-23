@@ -46,6 +46,9 @@ export class CartItemService {
             }
         })
 
+        console.log(this.prisma.product.findUnique({
+                where: { id: productId }}))
+
         if(!product) {
             throw new NotFoundException("Product not Found")
         }
@@ -60,6 +63,12 @@ export class CartItemService {
                 sessionId,
                 productId
             }
+        })
+
+       return  console.log({
+            quantity,
+            sessionId,
+            productId
         })
 
         return { message: "Cart created succes", cartCreated}

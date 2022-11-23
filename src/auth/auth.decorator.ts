@@ -5,7 +5,7 @@ export const Auth = createParamDecorator(
     (field: string, context: ExecutionContext) => {
         const req = context
             .switchToHttp()
-            .getRequest();
+            .getRequest<import('express').Request>();
 
         if (req['auth']) {
             const data = req['auth'] as AuthType;

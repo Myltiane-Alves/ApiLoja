@@ -15,7 +15,7 @@ export class ShoppingSession1665766209763 implements MigrationInterface {
 
                 },
                 {
-                    name: "userId",
+                    name: "personId",
                     type: "int",
                     isNullable: false
                 },
@@ -24,6 +24,7 @@ export class ShoppingSession1665766209763 implements MigrationInterface {
                     type: "decimal",
                     precision: 10,
                     scale: 2,
+                    default:0
                 },
                 {
                     name: "createdAt",
@@ -40,16 +41,16 @@ export class ShoppingSession1665766209763 implements MigrationInterface {
         }))
 
         await queryRunner.createForeignKey("shoppingSession", new TableForeignKey({
-            columnNames: ["userId"],
+            columnNames: ["personId"],
             referencedColumnNames: ["id"],
-            referencedTableName: "user",
-            name: "FK_shoppingSession_User",
+            referencedTableName: "person",
+            name: "FK_shoppingSession_Person",
             onDelete: "CASCADE"
         }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey("shoppingSession", "FK_shoppingSession_User");
+        await queryRunner.dropForeignKey("shoppingSession", "FK_shoppingSession_Person");
         await queryRunner.dropTable("shoppingSession");
     }
 

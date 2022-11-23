@@ -23,6 +23,7 @@ export class AdressesService {
 
     }
 
+
     async getById(id: number) {
         const address = await this.prisma.address.findUnique({
             where: {
@@ -112,10 +113,7 @@ export class AdressesService {
                 country,
                 phone,
                 phoneMobile,
-                personId,
-
-
-
+                personId
             },
 
         })

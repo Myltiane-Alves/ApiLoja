@@ -20,6 +20,8 @@ export class CartItemController {
         @Body('quantity') quantity,
 
     ) {
-        const cart = await this.cartService.created(quantity)
+        // const cart = await this.cartService.created(quantity)
+
+        return console.log(quantity)
     }
 }

@@ -8,8 +8,7 @@ import { UserModule } from 'src/user/user.module';
 @Module({
     imports: [
         PrismaModule,
-        AuthModule,
-        UserModule
+
     ],
     controllers: [
         ContactController,],

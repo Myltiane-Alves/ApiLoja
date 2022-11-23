@@ -1,14 +1,14 @@
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { ShoppingSessionController } from './shoppingsession.controller';
+import { ShoppingSessionService } from './shoppingsession.service';
 import { Module } from '@nestjs/common';
-import { UserModule } from '../user/user.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from 'src/user/user.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
     imports: [
         PrismaModule,
-        UserModule,
         JwtModule.registerAsync({
             useFactory: () => ({
                 secret: process.env.JWT_SECRET,
@@ -16,18 +16,13 @@ import { JwtModule } from '@nestjs/jwt';
                     expiresIn: Number(process.env.JWT_EXPIRES_IN)
                 }
             })
-        })
-
+        }),
+        UserModule,
+        AuthModule,
     ],
     controllers: [
-        AuthController,
-    ],
+        ShoppingSessionController,],
     providers: [
-        AuthService,
-    ],
-    exports: [
-        JwtModule,
-        AuthService
-    ]
+        ShoppingSessionService,],
 })
-export class AuthModule { }
+export class ShoppingSessionModule { }

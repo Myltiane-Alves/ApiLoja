@@ -1,3 +1,4 @@
+import { ShoppingSessionModule } from './shoppingSession/shoppingSession.module';
 import { CartItemController } from './cartItem/cartitem.controller';
 import { CartItemService } from './cartItem/cartitem.service';
 import { CartItemModule } from './cartItem/cartitem.module';
@@ -16,6 +17,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
     imports: [
+        ShoppingSessionModule,
         CartItemModule,
         PaymentModule,
         ContactModule,

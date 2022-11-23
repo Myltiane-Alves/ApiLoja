@@ -1,5 +1,5 @@
 import { type } from "os"
-import { MigrationInterface, QueryRunner, Table } from "typeorm"
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
 
 export class Contact1669112415944 implements MigrationInterface {
 
@@ -13,6 +13,11 @@ export class Contact1669112415944 implements MigrationInterface {
                     isPrimary: true,
                     isGenerated: true,
                     generationStrategy: "increment"
+                },
+                {
+                    name: "personId",
+                    type: "int",
+                    isNullable: false
                 },
                 {
                     name: "name",
@@ -33,6 +38,12 @@ export class Contact1669112415944 implements MigrationInterface {
                     isNullable: false,
                 },
                 {
+                    name: "message",
+                    type: "varchar",
+                    length: "255",
+                    isNullable: false,
+                },
+                {
                     name: "createdAt",
                     type: "timestamp",
                     default: "CURRENT_TIMESTAMP"
@@ -44,9 +55,18 @@ export class Contact1669112415944 implements MigrationInterface {
                 }
             ]
         }))
+
+        await queryRunner.createForeignKey("contacts", new TableForeignKey({
+            columnNames: ["personId"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "person",
+            name: "FK_contacts_Person",
+            onDelete: "CASCADE",
+        }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropForeignKey("contacts", "FK_contacts_Person");
         await queryRunner.dropTable("contacts")
     }
 

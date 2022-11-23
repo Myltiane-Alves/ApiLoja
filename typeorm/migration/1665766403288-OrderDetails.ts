@@ -14,7 +14,7 @@ export class OrderDetails1665766403288 implements MigrationInterface {
                     generationStrategy: "increment"
                 },
                 {
-                    name: "userId",
+                    name: "personId",
                     type: "int",
                     isNullable: false
                 },
@@ -44,16 +44,16 @@ export class OrderDetails1665766403288 implements MigrationInterface {
         }))
 
         await queryRunner.createForeignKey("orderDetails", new TableForeignKey({
-            columnNames: ["userId"],
+            columnNames: ["personId"],
             referencedColumnNames: ["id"],
-            referencedTableName: "user",
-            name: "FK_orderDetails_User",
+            referencedTableName: "person",
+            name: "FK_orderDetails_Person",
             onDelete: "CASCADE"
         }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey("orderDetails", "FK_orderDetails_User");
+        await queryRunner.dropForeignKey("orderDetails", "FK_orderDetails_Person");
         await queryRunner.dropTable("orderDetails");
     }
 

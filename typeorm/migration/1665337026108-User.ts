@@ -55,13 +55,13 @@ export class User1665337026108 implements MigrationInterface {
             columnNames: ["personId"],
             referencedColumnNames: ["id"],
             referencedTableName: "person",
-            name: "FK_users_persons",
+            name: "FK_users_Person",
             onDelete: "CASCADE"
         }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey("user", "FK_users_persons");
+        await queryRunner.dropForeignKey("user", "FK_users_Person");
         await queryRunner.dropTable("user")
     }
 

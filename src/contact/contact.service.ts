@@ -45,15 +45,49 @@ export class ContactService {
             throw new BadRequestException("Phone is required")
         }
 
-        const contactCreated = await this.prisma.contact.create({
+        let personId: number;
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email,
+            },
+            select: {
+                personId: true,
+            },
+        });
+
+        if(user) {
+
+        } else {
+
+            const contact = await this.prisma.contact.findFirst({
+                where: {
+                    email,
+                },
+            });
+
+            if(contact) {
+                personId = Number(contact.personId);
+            } else {
+                const newPerson = await this.prisma.person.create({
+                    data: {
+                        name,
+                    }
+                })
+
+                personId = Number(newPerson.id)
+            }
+        }
+
+
+        return this.prisma.contact.create({
             data: {
+                personId,
                 name,
                 email,
                 phone
-            }
-        })
-
-        return {message: "Contact created com sucess", contactCreated}
+            },
+        });
     }
 
     async remove(id: number){

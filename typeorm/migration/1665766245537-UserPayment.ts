@@ -15,7 +15,7 @@ export class UserPayment1665766245537 implements MigrationInterface {
 
                 },
                 {
-                    name: "userId",
+                    name: "personId",
                     type: "int",
                     isNullable: false
                 },
@@ -38,10 +38,10 @@ export class UserPayment1665766245537 implements MigrationInterface {
         }))
 
         await queryRunner.createForeignKey("userPayment", new TableForeignKey({
-            columnNames: ["userId"],
+            columnNames: ["personId"],
             referencedColumnNames: ["id"],
-            referencedTableName: "user",
-            name: "FK_userPayment_User",
+            referencedTableName: "person",
+            name: "FK_userPayment_Person",
             onDelete: "CASCADE"
         }))
 
@@ -55,7 +55,7 @@ export class UserPayment1665766245537 implements MigrationInterface {
 
     }
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropForeignKey("userPayment", "FK_userPayment_User");
+        await queryRunner.dropForeignKey("userPayment", "FK_userPayment_Person");
         await queryRunner.dropForeignKey("userPayment", "FK_userPayment_PaymentType");
         await queryRunner.dropTable("userPayment");
     }

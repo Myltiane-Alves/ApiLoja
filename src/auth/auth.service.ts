@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { UserService } from '../user/user.service';
 import {JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { parse } from 'date-fns';
+import { getOnlyNumbers } from 'src/utils/getOnlyNumbers';
 
 @Injectable()
 export class AuthService {
@@ -59,6 +61,19 @@ export class AuthService {
         return { success: true };
     }
 
+    async checkResetToken({ token }: { token: string}) {
+        if(!token) {
+            throw new BadRequestException("Token is required");
+        }
+
+        try {
+            await this.jwtService.verify(token);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    }
+
     async reset({password, token}: {password: string, token: string}){
 
         if (!password) {
@@ -95,5 +110,55 @@ export class AuthService {
             passwordrecovery.userId,
             password,
         )
+    }
+
+    async register({
+        name,
+        email,
+        password,
+        passwordConfirm,
+        birthAt,
+        document,
+        phone,
+    }: {
+        name: string;
+        email: string;
+        password: string;
+        passwordConfirm: string;
+        birthAt: string;
+        document: string;
+        phone: string;
+    }) {
+        if (password !== passwordConfirm) {
+            throw new BadRequestException(
+                'Password and password confirm must be the same',
+            );
+        }
+
+        let finalBirthAt = null;
+
+        if (birthAt) {
+            try {
+                finalBirthAt = parse(birthAt, 'yyyy-MM-dd', new Date());
+            } catch (e) {
+                throw new BadRequestException('Birth date is invalid');
+            }
+        }
+
+        phone = getOnlyNumbers(phone);
+        document = getOnlyNumbers(document);
+
+        const user = await this.userService.create({
+            name,
+            email,
+            password,
+            birthAt: finalBirthAt,
+            document,
+            phone,
+        });
+
+        const token = await this.getToken(user.id);
+
+        return { token };
     }
 }

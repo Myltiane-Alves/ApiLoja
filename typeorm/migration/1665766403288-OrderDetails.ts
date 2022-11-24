@@ -21,9 +21,9 @@ export class OrderDetails1665766403288 implements MigrationInterface {
                 {
                     name: "total",
                     type: "decimal",
-                    precision: 12,
-                    scale: 4,
-                    isNullable: false
+                    precision: 10,
+                    scale: 2,
+
                 },
                 {
                     name: "paymentId",

@@ -24,13 +24,15 @@ export class ContactController {
         @Body('name') name,
         @Body('email') email,
         @Body('phone') phone,
+        @Body('message') message,
 
     ) {
 
         return this.contactService.created({
             name,
             email,
-            phone
+            phone,
+            message
         })
     }
 

@@ -39,9 +39,10 @@ export class Product1665766306496 implements MigrationInterface {
                 },
                 {
                     name: "quantity",
-                    type: "varchar",
-                    length: "255",
-                    isNullable: false
+                    type: "decimal",
+                    precision: 10,
+                    scale: 2,
+
                 },
 
                 {

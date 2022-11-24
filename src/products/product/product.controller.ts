@@ -6,18 +6,27 @@ import {
     Get,
     UseGuards,
     Param,
-    Delete
+    Delete,
+    UseInterceptors,
+    Put,
+    UploadedFile,
+    Response
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { PhotoService } from 'src/photo/photo.service';
 import { User } from 'src/user/user.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 import { ProductService } from './product.service';
+import { Product } from './product.decorator';
 
 @Controller('produtos')
 export class ProductController {
 
     constructor(
         private productService: ProductService,
+        private photoService: PhotoService,
     ) {}
 
     @UseGuards(AuthGuard)
@@ -73,5 +82,29 @@ export class ProductController {
     @Delete(':id')
     async delete(@Param('id') id: number) {
         return this.productService.delete(id);
+    }
+
+    @UseGuards(AuthGuard)
+    @UseInterceptors(
+        FileInterceptor('file', {
+            dest: './storage/photos',
+            limits: {
+                fileSize: 50 * 1024 * 1024,
+                files: 1,
+            },
+        }),
+    )
+    @Put('productImage')
+    async uploadFile(@UploadedFile() file: Express.Multer.File, @Product() product) {
+        return this.productService.setPhoto(product.id, file);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('photo')
+    getProductPhoto(
+        @Response({ passthrough: true }) res,
+        @User('photo') photo: string,
+    ) {
+        return this.photoService.getStreambleFile(photo, res);
     }
 }

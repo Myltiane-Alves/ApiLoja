@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { isValidNumber } from 'src/utils/validation-number';
+import { CreateSessionDto } from './dto/create-session-dto';
 
 @Injectable()
 export class ShoppingSessionService {
@@ -15,16 +16,14 @@ export class ShoppingSessionService {
 
     async create(personId: number,  {
         total,
-    }: {
-        total: number,
-    }){
+    }: CreateSessionDto){
 
         if(isNaN(Number(personId))) {
             throw new BadRequestException("Person ID is required entrou aqui")
         }
-        if(!total) {
-            throw new BadRequestException('total is required');
-        }
+        // if(!total) {
+        //     throw new BadRequestException('total is required');
+        // }
 
         // userId = isValidNumber(userId)
 
@@ -38,16 +37,17 @@ export class ShoppingSessionService {
         //     throw new NotFoundException("User not found")
         // }
 
+
         const shoppingSessionCreated = await this.prisma.shoppingsession.create({
             data: {
-                total: isValidNumber(total),
+                total,
                 personId: isValidNumber(personId)
 
             }
 
         })
 
-        return console.log(shoppingSessionCreated)
-        // return { message: "Shopping Session Created", shoppingSessionCreated}
+        // return console.log(shoppingSessionCreated)
+        return { message: "Shopping Session Created", shoppingSessionCreated}
     }
 }

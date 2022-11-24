@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { totalmem, userInfo } from 'os';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { User } from 'src/user/user.decorator';
+import { CreateSessionDto } from './dto/create-session-dto';
 import { ShoppingSessionService } from './shoppingsession.service';
 
 @Controller('session')

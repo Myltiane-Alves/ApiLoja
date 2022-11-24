@@ -6,20 +6,27 @@ import {
     Put,
     BadRequestException,
     UseGuards,
+    UploadedFile,
+    UseInterceptors,
+    Response
 } from '@nestjs/common';
 import { parse } from 'date-fns';
 import { User } from 'src/user/user.decorator';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+// import { CreateUserDto } from '../user/dto/update-user.dto';
 import { UserService } from '../user/user.service';
 import { Auth } from './auth.decorator';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PhotoService } from 'src/photo/photo.service';
+import { dateStringToDate } from 'src/utils/dateStringToDate';
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private userService: UserService,
-        private authService: AuthService
+        private authService: AuthService,
+        private photoService: PhotoService,
     ) {}
 
     @Post()
@@ -80,13 +87,13 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Put('profile')
-    async profile(@User() user, @Body() body) {
+    async updateProfile(@Body() body, @Auth('id') id: number) {
 
         if(body.birthAt) {
-            body.birthAt = parse(body.birthAt, 'yyyy-MM-dd', new Date());
+            body.birthAt = dateStringToDate(body.birthAt);
         }
 
-        return this.userService.update(user.id, body);
+        return this.userService.update(id, body);
     }
 
     @UseGuards(AuthGuard)
@@ -109,4 +116,34 @@ export class AuthController {
         return await this.authService.reset({password, token});
     }
 
+    @UseGuards(AuthGuard)
+    @UseInterceptors(
+        FileInterceptor('file', {
+            dest: './storage/photos',
+            limits: {
+                fileSize: 50 * 1024 * 1024,
+                files: 1,
+            },
+        }),
+    )
+    @Put('photo')
+    async uploadFile(@UploadedFile() file: Express.Multer.File, @User() user){
+        return this.userService.setPhoto(user.id, file)
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('photo')
+    getUserPhoto(
+        @Response({ passthrough: true }) res,
+        @User('photo') photo: string,
+    ) {
+        return this.photoService.getStreambleFile(photo, res);
+    }
+
+    @Post('reset-token')
+    async resetToken(@Body('token') token) {
+        return {
+            valid: await this.authService.checkResetToken({ token }),
+        };
+    }
 }

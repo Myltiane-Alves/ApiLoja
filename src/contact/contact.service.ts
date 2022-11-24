@@ -9,12 +9,12 @@ export class ContactService {
     ){}
 
     async get(){
-        const contacts = await this.prisma.contact.findMany()
-        return { message: "All Contacts ", contacts}
+        const contact = await this.prisma.contacts.findMany()
+        return { message: "All Contacts ", contact}
     }
 
     async getById(id: number){
-        const contacts = await this.prisma.contact.findUnique({
+        const contacts = await this.prisma.contacts.findUnique({
             where: {
                 id: isValidNumber(id)
             }
@@ -26,12 +26,14 @@ export class ContactService {
     async created({
         name,
         email,
-        phone
+        phone,
+        message
 
     } : {
         name: string,
         email: string,
         phone: string,
+        message: string,
     }){
         if(!name) {
             throw new BadRequestException("Name is required")
@@ -39,10 +41,6 @@ export class ContactService {
 
         if(!email) {
             throw new BadRequestException("E-mail is required")
-        }
-
-        if(!phone) {
-            throw new BadRequestException("Phone is required")
         }
 
         let personId: number;
@@ -57,10 +55,9 @@ export class ContactService {
         });
 
         if(user) {
-
+            personId = Number(user.personId);
         } else {
-
-            const contact = await this.prisma.contact.findFirst({
+            const contact = await this.prisma.contacts.findFirst({
                 where: {
                     email,
                 },
@@ -72,7 +69,7 @@ export class ContactService {
                 const newPerson = await this.prisma.person.create({
                     data: {
                         name,
-                    }
+                    },
                 })
 
                 personId = Number(newPerson.id)
@@ -80,20 +77,24 @@ export class ContactService {
         }
 
 
-        return this.prisma.contact.create({
+        const contato = await this.prisma.contacts.create({
             data: {
-                personId,
                 name,
                 email,
-                phone
+                phone,
+                message,
+                personId
             },
+
         });
+
+        return contato;
     }
 
     async remove(id: number){
         id = Number(id)
 
-        const contacts = await this.prisma.contact.delete({
+        const contacts = await this.prisma.contacts.delete({
             where: {
                 id
             }

@@ -30,13 +30,8 @@ export class Discount1665766350724 implements MigrationInterface {
                     type: "decimal",
                     precision: 10,
                     scale: 2,
-                    isNullable: false
+
                 },
-                // {
-                //     name: "active",
-                //     type: "tinyint",
-                //     isNullable: false
-                // },
                 {
                     name: "createdAt",
                     type: "timestamp",

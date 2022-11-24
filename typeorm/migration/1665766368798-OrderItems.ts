@@ -25,8 +25,9 @@ export class OrderItems1665766368798 implements MigrationInterface {
                 },
                 {
                     name: "quantity",
-                    type: "int",
-                    isNullable: false
+                    type: "varchar",
+                    isNullable: false,
+                    default: 0,
                 },
                 {
                     name: "createdAt",

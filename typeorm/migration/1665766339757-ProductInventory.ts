@@ -15,7 +15,8 @@
 //                 },
 //                 {
 //                     name: "quantity",
-//                     type: "int",
+//                     type: "varchar",
+                    //    length: "255s",
 //                     isNullable: false
 //                 },
 //                 {

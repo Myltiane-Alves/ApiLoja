@@ -6,9 +6,13 @@ import {
 
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
+// import { CreateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { join } from 'path';
+import { createReadStream, existsSync, renameSync, unlinkSync } from 'fs';
+import { throws } from 'assert';
 
 
 @Injectable()
@@ -81,7 +85,7 @@ export class UserService {
             password: string;
             birthAt?: Date;
             phone?: string;
-            document: string;
+            document?: string;
         }) {
 
             if (!name) {
@@ -139,15 +143,8 @@ export class UserService {
         birthAt,
         phone,
         document,
-        photo
-    }: {
-        name?: string;
-        email?: string;
-        birthAt?: Date;
-        phone?: string;
-        document?: string;
-        photo?: string;
-    }) {
+    }: UpdateUserDto
+    ) {
 
         id = Number(id);
 
@@ -155,8 +152,8 @@ export class UserService {
             throw new BadRequestException('Id is not a number');
         }
 
-        const dataPerson = {} as Prisma.PersonUpdateInput;
-        const dataUser = {} as Prisma.UserUpdateInput;
+        const dataPerson = {} as Prisma.personUpdateInput;
+        const dataUser = {} as Prisma.userUpdateInput;
 
         if (name) {
             dataPerson.name = name;
@@ -174,9 +171,7 @@ export class UserService {
             dataPerson.document = document;
         }
 
-        if (photo) {
-            dataUser.photo = photo;
-        }
+
 
         if (email) {
             dataUser.email = email;
@@ -276,5 +271,93 @@ export class UserService {
         }
 
         return { message: 'User deleted successfully', user };
+    }
+
+    getStoragePhotoPath(photo: string){
+
+        if(!photo) {
+            throw new BadRequestException("Photo is required")
+        }
+
+        return join(__dirname, '../', '../', '../', 'storage', 'photos', photo);
+    }
+
+    async removePhoto(userId: number){
+        const { id, photo } = await this.get(userId);
+
+        if(photo) {
+
+            const currentPhoto = this.getStoragePhotoPath(photo);
+
+            if(existsSync(currentPhoto)) {
+                unlinkSync(currentPhoto);
+            }
+        }
+
+        return this.prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                photo: null,
+            }
+        });
+    }
+
+    async setPhoto(id: number, file: Express.Multer.File) {
+        if(!file) {
+            throw new BadRequestException("File is required.");
+        }
+
+        if(!['iamge/png', 'image/jpeg'].includes(file.mimetype)) {
+            throw new BadRequestException("Invalid file type.");
+        }
+
+        await this.removePhoto(id);
+
+        let ext = '';
+
+        switch (file.mimetype) {
+            case 'image/png':
+                ext = 'png';
+                break;
+            default:
+                ext = 'jpg';
+        }
+
+        const photo = `${file.filename}.${ext}`;
+        const from = this.getStoragePhotoPath(file.filename)
+        const to =  this.getStoragePhotoPath(photo)
+
+        renameSync(from, to);
+
+        return this.prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                photo,
+            },
+        });
+
+    }
+
+    async getPhoto(id: number){
+        const { photo } = await this.get(id);
+
+        let filePath = this.getStoragePhotoPath('../nophoto.png');
+
+        if(photo) {
+            filePath = this.getStoragePhotoPath(photo);
+        }
+
+        const file = createReadStream(filePath)
+
+        const extension = filePath.split('.').pop();
+
+        return {
+            file,
+            extension
+        };
     }
 }

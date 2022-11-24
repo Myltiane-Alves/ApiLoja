@@ -61,3 +61,4 @@ export class UserPayment1665766245537 implements MigrationInterface {
     }
 
 }
+//

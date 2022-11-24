@@ -24,7 +24,6 @@ export class ShoppingSession1665766209763 implements MigrationInterface {
                     type: "decimal",
                     precision: 10,
                     scale: 2,
-                    default:0
                 },
                 {
                     name: "createdAt",

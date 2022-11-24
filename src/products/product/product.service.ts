@@ -3,6 +3,8 @@ import {
     BadRequestException,
 } from '@nestjs/common';
 import { prisma } from '@prisma/client';
+import { createReadStream, existsSync, renameSync, unlinkSync } from 'fs';
+import { join } from 'path';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { isValidNumber } from 'src/utils/validation-number';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -16,11 +18,18 @@ export class ProductService {
     ) { }
 
     async get(){
+
         const products = await this.prisma.product.findMany();
         return { message: 'Products', products };
     }
 
     async getById(id: number){
+        id = Number(id);
+
+        if (isNaN(id)) {
+            throw new BadRequestException('Id is required');
+        }
+
         const product = await this.prisma.product.findUnique({
             where: {
                 id: isValidNumber(id),
@@ -117,5 +126,93 @@ export class ProductService {
         });
 
         return { message: 'Product deleted', productDeleted };
+    }
+
+    getStoragePhotoPath(photo: string){
+
+        if(!photo) {
+            throw new BadRequestException("Photo is required")
+        }
+
+        return join(__dirname, '../', '../', '../', 'storage', 'photos', photo);
+    }
+
+    async removePhoto(productId: number){
+        const { id, image } = await this.getById(productId);
+
+        if(image) {
+
+            const currentImage = this.getStoragePhotoPath(image);
+
+            if(existsSync(currentImage)) {
+                unlinkSync(currentImage);
+            }
+        }
+
+        return this.prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                photo: null,
+            }
+        });
+    }
+
+    async setPhoto(id: number, file: Express.Multer.File) {
+        if(!file) {
+            throw new BadRequestException("File is required.");
+        }
+
+        if(!['iamge/png', 'image/jpeg'].includes(file.mimetype)) {
+            throw new BadRequestException("Invalid file type.");
+        }
+
+        await this.removePhoto(id);
+
+        let ext = '';
+
+        switch (file.mimetype) {
+            case 'image/png':
+                ext = 'png';
+                break;
+            default:
+                ext = 'jpg';
+        }
+
+        const image = `${file.filename}.${ext}`;
+        const from = this.getStoragePhotoPath(file.filename)
+        const to =  this.getStoragePhotoPath(image)
+
+        renameSync(from, to);
+
+        return this.prisma.product.update({
+            where: {
+                id,
+            },
+            data: {
+                image,
+            },
+        });
+
+    }
+
+    async getPhoto(id: number){
+        const { image } = await this.getById(id);
+
+        let filePath = this.getStoragePhotoPath('../nophoto.png');
+
+        if(image) {
+            filePath = this.getStoragePhotoPath(image);
+        }
+
+        const file = createReadStream(filePath)
+
+        const extension = filePath.split('.').pop();
+
+        return {
+            file,
+            extension
+        };
     }
 }

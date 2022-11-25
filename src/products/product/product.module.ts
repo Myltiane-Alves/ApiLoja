@@ -5,6 +5,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserModule } from 'src/user/user.module';
+import { PhotoModule } from 'src/photo/photo.module';
 
 @Module({
     imports: [
@@ -18,7 +19,8 @@ import { UserModule } from 'src/user/user.module';
             })
         }),
         AuthModule,
-        UserModule
+        UserModule,
+        PhotoModule
     ],
     controllers: [
         ProductController,],

@@ -18,7 +18,7 @@ import { PhotoModule } from 'src/photo/photo.module';
         }),
         PrismaModule,
         UserModule,
-        PhotoModule,
+        // PhotoModule,
 
     ],
     controllers: [
@@ -27,6 +27,6 @@ import { PhotoModule } from 'src/photo/photo.module';
     providers: [
         AuthService,
     ],
-    exports: [ JwtModule, AuthService]
+    exports: [ JwtModule,]
 })
 export class AuthModule { }

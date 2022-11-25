@@ -20,6 +20,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ProductService } from './product.service';
 import { Product } from './product.decorator';
+import { identity } from 'rxjs';
 
 @Controller('produtos')
 export class ProductController {
@@ -49,6 +50,7 @@ export class ProductController {
         @Body('description') description,
         @Body('price') price,
         @Body('quantity') quantity,
+
     ) {
 
         const product = await this.productService.create({
@@ -56,6 +58,7 @@ export class ProductController {
             description,
             price,
             quantity,
+
         });
         return product;
 
@@ -69,12 +72,14 @@ export class ProductController {
         @Body('description') description,
         @Body('price') price,
         @Body('quantity') quantity,
+
     ) {
-        return this.productService.updated(id, {
+        return this.productService.updated(id,{
             name,
             description,
             price,
             quantity,
+
         });
     }
 
@@ -84,7 +89,6 @@ export class ProductController {
         return this.productService.delete(id);
     }
 
-    @UseGuards(AuthGuard)
     @UseInterceptors(
         FileInterceptor('file', {
             dest: './storage/photos',
@@ -93,18 +97,23 @@ export class ProductController {
                 files: 1,
             },
         }),
+
     )
-    @Put('productImage')
-    async uploadFile(@UploadedFile() file: Express.Multer.File, @Product() product) {
-        return this.productService.setPhoto(product.id, file);
+    @UseGuards(AuthGuard)
+    @Put('image')
+    async setPhoto(
+        @User() user,
+        @UploadedFile() file: Express.Multer.File) {
+        // return this.productService.setPhoto(product.id, file);
+        return console.log(this.productService.setPhoto(user.id, file))
     }
 
     @UseGuards(AuthGuard)
-    @Get('photo')
+    @Get('image')
     getProductPhoto(
         @Response({ passthrough: true }) res,
-        @User('photo') photo: string,
+        @Product('image') image: string,
     ) {
-        return this.photoService.getStreambleFile(photo, res);
+        return this.photoService.getStreambleImage(image, res);
     }
 }

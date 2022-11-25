@@ -1,7 +1,6 @@
 import { PhotoModule } from './photo/photo.module';
-import { ShoppingSessionModule } from './shoppingSession/shoppingSession.module';
-import { CartItemController } from './cartItem/cartitem.controller';
-import { CartItemService } from './cartItem/cartitem.service';
+// import { ShoppingSessionModule } from './shoppingSession/shoppingSession.module';
+
 import { CartItemModule } from './cartItem/cartitem.module';
 import { PaymentModule } from './payment/payment.module';
 import { ContactModule } from './contact/contact.module';
@@ -15,17 +14,18 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { Module } from '@nestjs/common';
+import { CartItemController } from './cartItem/cartitem.controller';
 
 @Module({
     imports: [
-        PhotoModule,
-        ShoppingSessionModule,
+        // PhotoModule,
+        // ShoppingSessionModule,
         CartItemModule,
         PaymentModule,
         ContactModule,
         AddressesModule,
         DiscountModule,
-        CategoryModule,
+        // CategoryModule,
         // InventoryModule,
         ProductModule,
         AuthModule,
@@ -37,7 +37,7 @@ import { Module } from '@nestjs/common';
         ZipcodeController,
     ],
     providers: [
-        CartItemService,
+
 
     ],
 })

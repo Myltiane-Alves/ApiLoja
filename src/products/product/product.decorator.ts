@@ -1,17 +1,27 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { ProductType } from './product.type';
 
 export const Product = createParamDecorator(
-    (field: string, ctx: ExecutionContext) => {
-        const request = ctx.switchToHttp().getRequest();
+    (field: string, context: ExecutionContext) => {
+        const req = context
+            .switchToHttp()
+            .getRequest<import('express').Request>()
 
-        if (field) {
-            if (request.user[field]) {
-                return request.user[field];
+        if (req['product']) {
+            const data =  req['product'] as ProductType;
+
+            data.id = Number(data.id);
+
+            if (field) {
+                return data[field];
             } else {
-                return null;
+                return data;
             }
         } else {
-            return request.user;
+            return null;
         }
-    },
+      },
+
+
+
 );

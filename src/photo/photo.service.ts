@@ -14,15 +14,12 @@ export class PhotoService {
 
     async getStreambleFile(path: string, response: Response){
         let filePath = this.userService.getStoragePhotoPath(path);
-        let imagePath = this.productService.getStoragePhotoPath(path);
 
         if(!existsSync(filePath)) {
             filePath = this.userService.getStoragePhotoPath('../nophoto.png');
-            imagePath = this.productService.getStoragePhotoPath('../nophoto.png');
         }
 
-        const file = createReadStream(filePath) || createReadStream(imagePath);
-        // const image = createReadStream(imagePath);
+        const file = createReadStream(filePath);
 
         let mimetype = '';
 
@@ -36,7 +33,26 @@ export class PhotoService {
                     mimetype = 'image/jpg';
 
         }
-        switch (imagePath.split('.').pop().toLocaleLowerCase()) {
+
+        response.set({
+            'Content-Type': mimetype,
+        });
+
+        return new StreamableFile(file)
+    }
+    async getStreambleImage(path: string, response: Response){
+
+        let filePath = this.productService.getStoragePhotoPath(path);
+
+        if(!existsSync(filePath)) {
+            filePath = this.productService.getStoragePhotoPath('../nophoto.png');
+        }
+
+        const file = createReadStream(filePath);
+
+        let mimetype = '';
+
+        switch (filePath.split('.').pop().toLocaleLowerCase()) {
             case 'png':
                 mimetype = 'image/png';
                 break;

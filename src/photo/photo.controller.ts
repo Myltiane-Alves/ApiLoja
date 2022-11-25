@@ -11,4 +11,8 @@ export class PhotoController {
     async show(@Param('photo') photo, @Response({ passthrough: true }) res) {
         return this.photoService.getStreambleFile(photo, res);
     }
+    @Get(':image')
+    async showByImage(@Param('image') image, @Response({ passthrough: true }) res) {
+        return this.photoService.getStreambleImage(image, res);
+    }
 }

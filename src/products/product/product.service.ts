@@ -44,11 +44,13 @@ export class ProductService {
         description,
         price,
         quantity,
+
     }:  {
         name: string;
         description: string;
         price: string;
         quantity: string;
+
     }  ){
 
         if(!name) {
@@ -73,6 +75,7 @@ export class ProductService {
                 description,
                 price,
                 quantity,
+
             },
         })
 
@@ -84,11 +87,13 @@ export class ProductService {
         description,
         price,
         quantity,
+
     } : {
         name: string;
         description: string;
         price: string;
         quantity: string;
+
     }){
         id = Number(id);
 
@@ -106,6 +111,7 @@ export class ProductService {
                 description,
                 price,
                 quantity,
+
             },
         });
 
@@ -128,13 +134,13 @@ export class ProductService {
         return { message: 'Product deleted', productDeleted };
     }
 
-    getStoragePhotoPath(photo: string){
+    getStoragePhotoPath(image: string){
 
-        if(!photo) {
-            throw new BadRequestException("Photo is required")
+        if(!image) {
+            throw new BadRequestException("Image is required")
         }
 
-        return join(__dirname, '../', '../', '../', 'storage', 'photos', photo);
+        return join(__dirname, '../', '../', '../', 'storage', 'photos', image);
     }
 
     async removePhoto(productId: number){
@@ -149,22 +155,23 @@ export class ProductService {
             }
         }
 
-        return this.prisma.user.update({
+        return this.prisma.product.update({
             where: {
                 id,
             },
             data: {
-                photo: null,
+                image: null,
             }
         });
     }
+
 
     async setPhoto(id: number, file: Express.Multer.File) {
         if(!file) {
             throw new BadRequestException("File is required.");
         }
 
-        if(!['iamge/png', 'image/jpeg'].includes(file.mimetype)) {
+        if(!['image/png', 'image/jpeg'].includes(file.mimetype)) {
             throw new BadRequestException("Invalid file type.");
         }
 

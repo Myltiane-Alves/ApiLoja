@@ -1,43 +1,41 @@
 import { Injectable, StreamableFile } from '@nestjs/common';
 import { Response } from 'express';
 import { createReadStream, existsSync } from 'fs';
-import { UserService } from 'src/user/user.service';
+
+import { ProductService } from '../product/product.service';
 
 @Injectable()
-export class PhotoService {
-
+export class ProductPhotoService {
     constructor(
-        private userService: UserService,
+        private productService: ProductService,
     ){}
 
     async getStreambleFile(path: string, response: Response){
-        let filePath = this.userService.getStoragePhotoPath(path);
+        let filePath = this.productService.getStoragePhotoPath(path);
 
         if(!existsSync(filePath)) {
-            filePath = this.userService.getStoragePhotoPath('../nophoto.png');
+            filePath = this.productService.getStoragePhotoPath('../nophoto.png');
         }
 
         const file = createReadStream(filePath);
 
-        let mimetype = '';
+        let mimeType = '';
 
         switch (filePath.split('.').pop().toLocaleLowerCase()) {
             case 'png':
-                mimetype = 'image/png';
+                mimeType = 'image/png';
                 break;
             case 'jpg':
             case 'jpeg':
                 default:
-                    mimetype = 'image/jpg';
+                    mimeType = 'image/jpg';
 
         }
 
         response.set({
-            'Content-Type': mimetype,
-        });
+            'Content-Type': mimeType,
+        })
 
         return new StreamableFile(file)
     }
-
-
 }

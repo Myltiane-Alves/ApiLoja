@@ -309,7 +309,7 @@ export class UserService {
             throw new BadRequestException("File is required.");
         }
 
-        if(!['iamge/png', 'image/jpeg'].includes(file.mimetype)) {
+        if(!['image/png', 'image/jpeg'].includes(file.mimetype)) {
             throw new BadRequestException("Invalid file type.");
         }
 
@@ -330,6 +330,7 @@ export class UserService {
         const to =  this.getStoragePhotoPath(photo)
 
         renameSync(from, to);
+
 
         return this.prisma.user.update({
             where: {

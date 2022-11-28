@@ -13,21 +13,18 @@ import {
     Response
 } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { PhotoService } from 'src/photo/photo.service';
 import { User } from 'src/user/user.decorator';
-import { CreateProductDto } from './dto/create-product.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-
 import { ProductService } from './product.service';
 import { Product } from './product.decorator';
-import { identity } from 'rxjs';
+import { ProductPhotoService } from '../productPhoto/productPhoto.service';
 
 @Controller('produtos')
 export class ProductController {
 
     constructor(
         private productService: ProductService,
-        private photoService: PhotoService,
+        private productPhotoService: ProductPhotoService,
     ) {}
 
     @UseGuards(AuthGuard)
@@ -91,7 +88,7 @@ export class ProductController {
 
     @UseInterceptors(
         FileInterceptor('file', {
-            dest: './storage/photos',
+            dest: './productStorage/image',
             limits: {
                 fileSize: 50 * 1024 * 1024,
                 files: 1,
@@ -108,12 +105,15 @@ export class ProductController {
         return console.log(this.productService.setPhoto(user.id, file))
     }
 
+
     @UseGuards(AuthGuard)
     @Get('image')
     getProductPhoto(
         @Response({ passthrough: true }) res,
         @Product('image') image: string,
     ) {
-        return this.photoService.getStreambleImage(image, res);
+        return this.productPhotoService.getStreambleFile(image, res);
     }
 }
+
+

@@ -1,3 +1,4 @@
+//@ts-check
 import {
     Injectable ,
     BadRequestException,
@@ -87,13 +88,13 @@ export class ProductService {
         description,
         price,
         quantity,
-
+        // image
     } : {
         name: string;
         description: string;
         price: string;
         quantity: string;
-
+        // image: string;
     }){
         id = Number(id);
 
@@ -140,7 +141,8 @@ export class ProductService {
             throw new BadRequestException("Image is required")
         }
 
-        return join(__dirname, '../', '../', '../', 'storage', 'photos', image);
+        return join(__dirname, '../', '../', '../', 'ProductStorage', 'image', image);
+        // return join(__dirname, '../../../storage/photos', image);
     }
 
     async removePhoto(productId: number){

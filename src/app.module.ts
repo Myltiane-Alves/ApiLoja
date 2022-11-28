@@ -1,3 +1,5 @@
+import { ProductPhotoController } from './products/productPhoto/productPhoto.controller';
+import { ProductPhotoModule } from './products/productPhoto/productPhoto.module';
 import { PhotoModule } from './photo/photo.module';
 // import { ShoppingSessionModule } from './shoppingSession/shoppingSession.module';
 
@@ -18,6 +20,7 @@ import { CartItemController } from './cartItem/cartitem.controller';
 
 @Module({
     imports: [
+        ProductPhotoModule,
         // PhotoModule,
         // ShoppingSessionModule,
         CartItemModule,
@@ -33,11 +36,11 @@ import { CartItemController } from './cartItem/cartitem.controller';
         PrismaModule,
     ],
     controllers: [
+        ProductPhotoController,
         CartItemController,
         ZipcodeController,
     ],
     providers: [
-
 
     ],
 })

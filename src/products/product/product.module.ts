@@ -7,6 +7,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { UserModule } from 'src/user/user.module';
 import { PhotoModule } from 'src/photo/photo.module';
 import { AuthService } from 'src/auth/auth.service';
+import { ProductPhotoModule } from '../productPhoto/productPhoto.module';
 
 @Module({
     imports: [
@@ -19,7 +20,7 @@ import { AuthService } from 'src/auth/auth.service';
                 }
             })
         }),
-        forwardRef(() => PhotoModule),
+        forwardRef(() => ProductPhotoModule),
         forwardRef(() => AuthModule),
         forwardRef(() => UserModule)
 
